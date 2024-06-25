@@ -45,8 +45,8 @@ class Game {
 
     makeAMove(move) {
         const gamecopy = new Chess(this.chess.fen());
-        const df = gamecopy.move(move);
         try {
+            const df = gamecopy.move(move);
             if (df) {
                 this.chess = new Chess(gamecopy.fen());
                 return true;
