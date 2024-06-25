@@ -1,11 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { stateChange } from "../redux/timer/timecounter";
-
+import { useEffect } from "react";
 function Workload2() {
     const ws = useSelector(state => state.ws.value)
-    ws.addEventListener("open", () => {
-        console.log("server started..")
-    });
     const count = useSelector(state => state.time.value)
     const dispatch = useDispatch()
 
@@ -13,16 +10,31 @@ function Workload2() {
         dispatch(stateChange(parseInt(e.target.value)))
     }
     const handleclick = async (e) => {
-        ws.addEventListener("message", (message,) => {
-            let obj = message.data; //string
-            obj = JSON.parse(obj)
-            console.log(obj)
-            alert(obj.message)
-        });
         ws.send(JSON.stringify({ 'message': "init_start" }))
         let r = document.querySelector('.workload')
         r.innerText = "Status...."
     }
+    useEffect(() => {
+        ws.addEventListener("open", () => {
+            console.log("server started..")
+        });
+        const eventHandle = (message) => {
+            let obj = message.data; //string
+            obj = JSON.parse(obj)
+            alert(obj.message)
+            if (obj.moved) {
+                const positions = obj['moved']
+                let r = document.querySelector('.workload')
+                r.innerText = positions['to']
+            }
+        }
+        ws.addEventListener("message", eventHandle)
+        return () => {
+            ws.removeEventListener("message", eventHandle)
+        }
+    }, [ws])
+
+
     return (
         <div className="workload">
             <button className="play" onClick={handleclick}>play</button>
