@@ -1,12 +1,19 @@
 import express from "express";
 import path from 'path'
+import {login} from './Routes/login route.js'
+
 import { WebSocketServer } from 'ws'
 import { gameManager, Game } from "./gameManager.js";
+import { register } from "./Routes/register route.js";
 const app = express();
 const port = 3000;
 import cors from 'cors'
 app.use(express.static(path.resolve('public')))
 app.use(cors())
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+app.use("/login",login)
+app.use("/register",register)
 app.get("/ss", (req, res) => {
     console.log("asas")
     res.json({ message: 'asas' })
