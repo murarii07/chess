@@ -16,11 +16,11 @@ const server = app.listen(port, () => {
     console.log("server started........");
 });
 let onlineplayer = []
-let dd = []
-let r = new gameManager();
+// let dd = []
+const Manager = new gameManager();
 const wss = new WebSocketServer({ server })
 wss.on("connection", (ws) => {
-    r.addUser(ws)
+    Manager.addUser(ws)
     ws.on("message", (message) => {
         let obj = message
         obj = JSON.parse(obj)
@@ -28,40 +28,43 @@ wss.on("connection", (ws) => {
         if (obj['message'] === 'init_start') {
             onlineplayer.push(ws)
             ws.send(JSON.stringify({ "message": "Searching players.........." }))
-            let count = onlineplayer.length;
-            console.log(onlineplayer.length, 111111)
-            if (count >= 2) {
-                let p1 = onlineplayer.shift()
-                let p2 = onlineplayer.shift()
-                let rp = new Game(p1, p2);
-                dd.push(rp)
-                p1.send(JSON.stringify({ "message": "player found", playerId: dd.indexOf(rp), flag: 'white', player: "p1", chess: rp.chess }))
-                p2.send(JSON.stringify({ "message": "player found", playerId: dd.indexOf(rp), color:'black', player: "p2", chess: rp.chess }))
-
-                console.log("lets play the game")
+            // console.log(onlineplayer.length, 111111)
+            if (onlineplayer.length >= 2) {
+                const p1 = onlineplayer.shift()
+                const p2 = onlineplayer.shift()
+                // let rp = new Game(p1, p2,playerid);
+                // dd.push(rp)
+                // p1.send(JSON.stringify({ "message": "playerfound", playerId: dd.indexOf(rp), color: 'white', player: "p1", }))
+                // p2.send(JSON.stringify({ "message": "playerfound", playerId: dd.indexOf(rp), color: 'black', player: "p2", }))
+                // console.log("lets play the game")
+                Manager.playGame(p1,p2)
             }
         }
         else if (obj['message'] === 'move') {
             let id = obj['playerId']
-            let f = dd[parseInt(id)]
-            console.log(dd)
-            let res = f.makeAMove(obj['move'])
-            console.log(res)
-            if (res) {
-                console.log(f.chess.fen())
-                f.player1.send(JSON.stringify({ chessboard: f.chess.fen() ,message:'moved'}))
-                f.player2.send(JSON.stringify({ chessboard: f.chess.fen() ,message:'moved'}))
-            }
-            else {
-
+            try{
+                const f = Manager.gameZone[parseInt(id)]
+                console.log(id)
+                let res = f.makeAMove(obj['move'])
+                // console.log(res)
+                if (res) {
+                    console.log(f.chess.fen())
+                    f.player1.send(JSON.stringify({ chessboard: f.chess.fen(), message: 'moved', moved: obj['move'] }))
+                    f.player2.send(JSON.stringify({ chessboard: f.chess.fen(), message: 'moved', moved: obj['move'] }))
+                }
+                else {
+                    console.log("wrong move")
+                }
+            }catch(TypeError){
+                console.log("error: id not found")
             }
         }
 
-        console.log(r.players.length)
+        console.log(Manager.players.length)
 
 
     })
     ws.on("close", () => {
-        r.removeUser(ws)
+        Manager.removeUser(ws)
     })
 });
