@@ -30,22 +30,22 @@ function PlayRandomMoveEngine() {
       obj = JSON.parse(obj)
       if (obj['color'] === "black") {
         fl.current = !fl.current;
-        console.log("color", fl.current)
-        console.log('💕')
+       // console.log("color", fl.current)
+       // console.log('💕')
         setcolor("black")
       }
       if (obj['message'] === 'moved') {
-        console.log("fun")
+     //   console.log("fun")
         fl.current = !fl.current; // Toggle the flag
-        console.log("moved", fl.current)
+        //console.log("moved", fl.current)
         let board = obj['chessboard']
         const gameCopy = new Chess(board);
         setGame(gameCopy)
       }
       if (obj['message'] === "playerfound") {
-        console.log("ASSSSS",obj['playerId'], id.current)
+      //  console.log("ASSSSS",obj['playerId'], id.current)
         id.current = obj['playerId']
-        console.log(id.current)
+      //  console.log(id.current)
       }
     }
     ws.addEventListener("message", eventHandle)

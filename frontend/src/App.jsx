@@ -3,18 +3,27 @@ import './App.css';
 import Navbar from './Components/Navbar';
 import Landing from './Components/landing';
 import Status from './Components/StatusBar';
+import Login from './Components/login';
+import Register from './Components/Register';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Loading from './Components/loading';
 function App() {
- 
-  return (
-    <>
-      <Navbar />
-      <div className="main">
-        {/* <Loading message="sd"/> */}
-        <Landing />
-        <Status />
-      </div>
 
-    </>
+  return (
+
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<><Navbar />
+        <Loading />
+          <div className="main">
+            <Landing />
+            <Status />
+          </div></>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

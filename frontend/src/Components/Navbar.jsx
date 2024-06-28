@@ -5,8 +5,15 @@ function Navbar() {
                 CHESS
             </ul>
             <ul>
-                <li>login</li>
-                <li>signup</li>
+                    <li>
+                <a href="/login" target="_blank" rel="noopener noreferrer">login
+                </a>
+                    </li>
+                    <li>
+                <a href="/register" target="_blank" rel="noopener noreferrer">register
+                </a>
+                    </li>
+          
             </ul>
         </nav>
     )

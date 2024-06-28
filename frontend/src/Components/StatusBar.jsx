@@ -43,7 +43,7 @@ function Status() {
                 {list.map(((x, index) => <li className={x} key={index} id={x}>{x}</li>))}
             </div>
             {listContent[nodea]}
-           
+
         </div>
     )
 }

@@ -9,8 +9,10 @@ function Workload2() {
     const handle = (e) => {
         dispatch(stateChange(parseInt(e.target.value)))
     }
-    const handleclick = async (e) => {
+    const handleclick = async () => {
         ws.send(JSON.stringify({ 'message': "init_start" }))
+        let load = document.querySelector('.Loading');
+        load.style.display = "flex";
         let r = document.querySelector('.workload')
         r.innerText = "Status...."
     }
@@ -25,27 +27,27 @@ function Workload2() {
             if (obj.moved) {
                 const positions = obj['moved']
                 let r = document.querySelector('.workload')
-                r.innerText = positions['to']
+                r.innerText = `${positions['from']}-${positions['to']}`
             }
         }
         ws.addEventListener("message", eventHandle)
         return () => {
-            ws.removeEventListener("message", eventHandle)
-        }
-    }, [ws])
+        ws.removeEventListener("message", eventHandle)
+    }
+}, [ws])
 
 
-    return (
-        <div className="workload">
-            <button className="play" onClick={handleclick}>play</button>
-            <select value={count} onChange={handle} id="opt">
-                <option value={5}>5min</option>
-                <option value={10}>10min</option>
-                <option value={3}>3min</option>
-            </select>
+return (
+    <div className="workload">
+        <button className="play" onClick={handleclick}>Play</button>
+        <select value={count} onChange={handle} id="opt">
+            <option value={5}>5min</option>
+            <option value={10}>10min</option>
+            <option value={3}>3min</option>
+        </select>
 
-        </div>
-    )
+    </div>
+)
 }
 
 export default Workload2;
