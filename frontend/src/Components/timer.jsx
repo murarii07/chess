@@ -2,20 +2,22 @@ import { useEffect, useRef, useState } from "react"
 import { useSelector } from "react-redux"
 function Timer(props) {
     const time = useSelector(state => state.time.value)
-    const [timea, setTime] = useState(time)
-    const [flag, setflag] = useState(false)
+    const flag = useSelector(state => state.f.value)
+    const [timea, setTime] = useState(time - 1)
+
     const reff = useRef(null)
-    const currentRef = useRef(Date.now())
-    const re = useRef(null)
+    const [seconds, setSec] = useState(59)
+    const re = useRef(seconds)
     useEffect(() => {
         if (flag) {
             reff.current = setInterval(() => {
-                setTime(c => c + 1)
-                //date.now give current time in milliseconds since 10s=10000ms
-                re.current = Date.now() - currentRef.current;
-                console.log(re.current)
-                if (re.current > 10000) {
-                    clearInterval(reff.current)
+                if (re.current !== 0) {
+                    re.current -= 1
+                    setSec(s => s - 1)
+                } else {
+                    re.current=59
+                    setTime(t => t - 1)
+                    setSec(59)
                 }
             }, 1000)
         }
@@ -23,16 +25,10 @@ function Timer(props) {
             clearInterval(reff.current)
         }
     }, [flag])
-    const handleclick = () => {
-        setflag(true)
-        console.log(flag)
-    }
-    useEffect(() => {
-        setTime(time)
-    }, [time])
+
     return (
-        <div onClick={handleclick}>
-            {timea}:00
+        <div>
+            {timea}:{seconds}
         </div>
     )
 }

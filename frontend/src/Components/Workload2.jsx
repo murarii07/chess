@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { stateChange } from "../redux/timer/timecounter";
 import { useEffect } from "react";
+
 function Workload2() {
     const ws = useSelector(state => state.ws.value)
     const count = useSelector(state => state.time.value)
@@ -11,8 +12,8 @@ function Workload2() {
     }
     const handleclick = async () => {
         ws.send(JSON.stringify({ 'message': "init_start" }))
-        let load = document.querySelector('.Loading');
-        load.style.display = "flex";
+        // let load = document.querySelector('.Loading');
+        // load.style.display = "flex";
         let r = document.querySelector('.workload')
         r.innerText = "Status...."
     }

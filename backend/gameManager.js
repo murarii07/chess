@@ -20,8 +20,8 @@ class gameManager {
         const r = new Game(p1, p2);
         this.gameZone.push(r)
         const id = this.gameZone.indexOf(r)
-        p1.send(JSON.stringify({ "message": "playerfound", playerId: id, color: 'white', player: "p1", }))
-        p2.send(JSON.stringify({ "message": "playerfound", playerId: id, color: 'black', player: "p2", }))
+        p1.send(JSON.stringify({ "message": "playerfound", playerId: id, color: 'white', player: "p1",opponent:"naam" }))
+        p2.send(JSON.stringify({ "message": "playerfound", playerId: id, color: 'black', player: "p2",opponent:"naam" }))
         console.log("lets play the game")
     }
 

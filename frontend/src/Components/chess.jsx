@@ -2,21 +2,24 @@ import { useRef, useState, useEffect } from "react";
 import { BLACK, Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useDispatch, useSelector } from "react-redux";
+import {stateChange} from '../redux/games/playerCredientials'
+import { stateFlagChange } from "../redux/games/flag";
 function PlayRandomMoveEngine() {
   const ws = useSelector(state => state.ws.value)
+  const user = useSelector(state => state.user.value)
   const [game, setGame] = useState(new Chess());
   const [color, setcolor] = useState("white")
   const [playerId, setplayer] = useState(null);
   const [flag, setflag] = useState(true);
   const fl = useRef(flag)
   const id = useRef(playerId)
-
+  const dispatch = useDispatch();
   function onDrop(sourceSquare, targetSquare) {
     if (fl.current) {
-      console.log("yaaaa",id.current)
-      console.log("sd",sourceSquare,targetSquare,)
+      console.log("yaaaa", id.current)
+      console.log("sd", sourceSquare, targetSquare,)
       ws.send(JSON.stringify({
-        message: "move", playerId: id.current, move: {
+        message: "move", playerId: id.current, playername:user,move: {
           from: sourceSquare,
           to: targetSquare,
         }
@@ -30,22 +33,23 @@ function PlayRandomMoveEngine() {
       obj = JSON.parse(obj)
       if (obj['color'] === "black") {
         fl.current = !fl.current;
-       // console.log("color", fl.current)
-       // console.log('💕')
         setcolor("black")
       }
       if (obj['message'] === 'moved') {
-     //   console.log("fun")
         fl.current = !fl.current; // Toggle the flag
-        //console.log("moved", fl.current)
         let board = obj['chessboard']
         const gameCopy = new Chess(board);
         setGame(gameCopy)
+        dispatch(stateFlagChange(false))
+        return;
       }
       if (obj['message'] === "playerfound") {
-      //  console.log("ASSSSS",obj['playerId'], id.current)
         id.current = obj['playerId']
-      //  console.log(id.current)
+        dispatch(stateFlagChange(true))
+      }
+      if (obj['opponent']) {
+        console.log(obj['opponent'])
+        dispatch(stateChange(obj['opponent']))
       }
     }
     ws.addEventListener("message", eventHandle)

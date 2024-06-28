@@ -4,7 +4,6 @@ import Workload2 from "./Workload2";
 import Workload3 from "./Workload3";
 import { useSelector, useDispatch } from "react-redux";
 import { stateChange } from "../redux/flagSlice";
-import { Chessboard } from "react-chessboard";
 function Status() {
     //using redux
     const nodea = useSelector(state => state.flag.value)

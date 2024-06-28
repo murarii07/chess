@@ -26,7 +26,7 @@ code {
 
 .chessboard{
   margin:100px 12px;
-  border:2px solid rgba(255, 255, 255, 0.938);
+  /* border:2px solid rgba(255, 255, 255, 0.938); */
   width: 50%;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.233);
   border-radius: 7px;
@@ -37,30 +37,18 @@ code {
   align-items: center;
   /* background-color: rgba(75, 75, 75, 0.185); */
 }
+
 .row{
   display: flex;
   width: 99%;
-  height: 10%;
+  height: 20%;
   box-sizing: border-box;
   
 }
-.chess{
-  height: 10%;
-  width: 99%;
-  box-sizing: border-box;
-  margin: 0% 1%;
-}
-.row div{
-  /* border:2px solid rgba(0, 0, 0, 0.404); */
-  width: 13%;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 .Status{
   margin: 99px 12px;
-  border:2px solid rgba(255, 255, 255, 0.993);
+  /* border:2px solid rgba(255, 255, 255, 0.993); */
   height: 85vh;
   width: 50%;
   border-radius: 12px;
@@ -104,13 +92,12 @@ code {
   border-radius: 23px;
 }
 
-
-
 .workload{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 400px;
 
 
   
@@ -156,16 +143,14 @@ opacity: 0.9;
   background-color: rgb(168, 32, 32);
   border-radius: 12px;
   box-sizing: border-box;
-  margin: 5px auto;
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
   padding-right: 23px;
   align-items: center;
   user-select: none;
-  /* font-size: 2vw; */
-  position: fixed
-  
+  position: fixed;
+  z-index: 1;
 }
 ul{
   width:25%;
@@ -193,32 +178,7 @@ li:hover{
   background-color: rgba(255, 51, 51, 0.87);
   color: aliceblue;
 }
-@media (max-width: 700px) {
-  .chessboard{
-    width: 96%;
-    height: 90vh;
-    margin-bottom: 12px;
-    
-  }
-  .main{
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    
-  }
-  .Status{
-    width: 96%;
-    height: 90vh;
-    /* margin-bottom: 12px; */
-    margin-top: 12px;
-  }
-  li{
-    font-size: 0.7em;
-  }
-  .navbar{
-    justify-content: space-evenly;
-  }
-}
+
 .Loading{
   position: absolute;
   background-color: white;
@@ -245,4 +205,72 @@ li:hover{
 
 ::-webkit-scrollbar{
   display: none;
+}
+.chat-system{
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 400px;
+  justify-content: space-around;
+  align-items: center;
+  /* background-color: antiquewhite; */
+}
+.chat{
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 80%;
+  overflow-y: scroll;
+  /* background-color: rgb(0, 0, 0); */
+}
+.input-chat{
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.input-chat input{
+  width: 70%;
+  height: 100%;
+  color: rgb(0, 0, 0);
+  background-color: blue,;
+  border-radius: 12px;
+  padding: 12px;
+  box-sizing: border-box;
+}
+.input-chat button{
+  width: 15%;
+  color: black;
+  height: 100%;
+  border-radius: 12px;
+}
+
+
+@media (max-width: 700px) {
+  .chessboard{
+    width: 96%;
+    height: 90vh;
+    margin-bottom: 12px;
+    
+  }
+  .main{
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    
+  }
+  .Status{
+    width: 96%;
+    height: 90vh;
+    /* margin-bottom: 12px; */
+    margin-top: 12px;
+  }
+  li{
+    font-size: 0.7em;
+  }
+  .navbar{
+    justify-content: space-evenly;
+  }
 }

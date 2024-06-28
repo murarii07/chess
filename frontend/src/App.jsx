@@ -14,7 +14,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<><Navbar />
-        <Loading />
+        {/* <Loading /> */}
           <div className="main">
             <Landing />
             <Status />

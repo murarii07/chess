@@ -39,11 +39,6 @@ wss.on("connection", (ws) => {
             if (onlineplayer.length >= 2) {
                 const p1 = onlineplayer.shift()
                 const p2 = onlineplayer.shift()
-                // let rp = new Game(p1, p2,playerid);
-                // dd.push(rp)
-                // p1.send(JSON.stringify({ "message": "playerfound", playerId: dd.indexOf(rp), color: 'white', player: "p1", }))
-                // p2.send(JSON.stringify({ "message": "playerfound", playerId: dd.indexOf(rp), color: 'black', player: "p2", }))
-                // console.log("lets play the game")
                 Manager.playGame(p1,p2)
             }
         }
