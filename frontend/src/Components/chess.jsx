@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { BLACK, Chess } from "chess.js";
+import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useDispatch, useSelector } from "react-redux";
 import {stateChange} from '../redux/games/playerCredientials'
@@ -7,15 +7,14 @@ import { stateFlagChange } from "../redux/games/flag";
 function PlayRandomMoveEngine() {
   const ws = useSelector(state => state.ws.value)
   const user = useSelector(state => state.user.value)
+  const gameFlag=useSelector(state => state.f.value)
   const [game, setGame] = useState(new Chess());
   const [color, setcolor] = useState("white")
   const [playerId, setplayer] = useState(null);
-  const [flag, setflag] = useState(true);
-  const fl = useRef(flag)
   const id = useRef(playerId)
   const dispatch = useDispatch();
   function onDrop(sourceSquare, targetSquare) {
-    if (fl.current) {
+    if (gameFlag) {
       console.log("yaaaa", id.current)
       console.log("sd", sourceSquare, targetSquare,)
       ws.send(JSON.stringify({
@@ -31,21 +30,20 @@ function PlayRandomMoveEngine() {
     const eventHandle = (message) => {
       let obj = message.data; //string
       obj = JSON.parse(obj)
+      if (obj['message'] === "playerfound") {
+        id.current = obj['playerId']
+        dispatch(stateFlagChange())
+      }
       if (obj['color'] === "black") {
-        fl.current = !fl.current;
         setcolor("black")
+        dispatch(stateFlagChange())
       }
       if (obj['message'] === 'moved') {
-        fl.current = !fl.current; // Toggle the flag
         let board = obj['chessboard']
         const gameCopy = new Chess(board);
         setGame(gameCopy)
-        dispatch(stateFlagChange(false))
+        dispatch(stateFlagChange())
         return;
-      }
-      if (obj['message'] === "playerfound") {
-        id.current = obj['playerId']
-        dispatch(stateFlagChange(true))
       }
       if (obj['opponent']) {
         console.log(obj['opponent'])

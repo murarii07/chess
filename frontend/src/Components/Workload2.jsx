@@ -8,6 +8,7 @@ function Workload2() {
     const dispatch = useDispatch()
 
     const handle = (e) => {
+        console.log(e.target.value)
         dispatch(stateChange(parseInt(e.target.value)))
     }
     const handleclick = async () => {

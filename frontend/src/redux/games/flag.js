@@ -6,8 +6,8 @@ export const Flag = createSlice({
         value:false,
     },
     reducers: {
-        stateFlagChange: (state, action) => {
-            state.value = action.payload
+        stateFlagChange: (state) => {
+            state.value = !state.value
         },
 
     }

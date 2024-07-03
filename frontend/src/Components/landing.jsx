@@ -12,7 +12,7 @@ function Landing() {
                     {/* <img src={logo}  /> */}
                     <span>{opponent}</span>
                 </div>
-                <Timer time={10} />
+                {/* <Timer  /> */}
             </div>
             <div className='chessb'>
                 <PlayRandomMoveEngine />
@@ -20,9 +20,9 @@ function Landing() {
             <div className="row" id='sender'>
                 <div>
                     {/* <img src={logo}  /> */}
-                    <span>{user}</span>
+                    <span>{user==="login"?Math.random(5).toString(16):user}</span>
                 </div>
-                <Timer time={10} />
+                <Timer  />
             </div>
         </div>
     );
