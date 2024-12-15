@@ -3,10 +3,13 @@ import { useSelector } from "react-redux"
 function Timer() {
     const time = useSelector(state => state.time.value)
     const flag = useSelector(state => state.f.value)
-    const [timea, setTime] = useState(time - 1)
+    const [timea, setTime] = useState(time)
     const reff = useRef(null)
     const [seconds, setSec] = useState(59)
     const re = useRef(seconds)
+    useEffect(()=>{
+        setTime(time-1)
+    },[time])
     useEffect(() => {
         if (flag) {
             reff.current = setInterval(() => {

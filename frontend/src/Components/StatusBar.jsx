@@ -34,8 +34,8 @@ function Status() {
         e.target.style = "background: rgba(255, 228, 196, 0.089);"
     }
     useEffect(() => {
-
-    }, [])
+        
+    }, [nodea])
     return (
         <div className="Status">
             <div className="nav" onClick={handleClick}>

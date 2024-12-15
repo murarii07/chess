@@ -5,13 +5,16 @@ import websocketReducer from './games/gameboard.js'
 import credentialsReducer from './games/playerCredientials.js'
 import userCredientialsReducer from './games/userCredientials.js'
 import FlagplayReducer from "./games/flag.js"
+import statusBoard from "./games/statusBoard.js"
 export default configureStore({
   reducer: {
     time: counterReducer,
     flag: FlagReducer,
-    ws:websocketReducer,
-    opponent:credentialsReducer,
-    user:userCredientialsReducer,
-    f:FlagplayReducer,
+    ws: websocketReducer,
+    opponent: credentialsReducer,
+    user: userCredientialsReducer,
+    f: FlagplayReducer,
+    statusBoard: statusBoard
+
   }
 })

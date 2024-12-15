@@ -9,10 +9,6 @@ function Workload1() {
         console.log(ws)
         let r = document.querySelector(".workload")
         r.innerText = "Status...."
-        // let doc = document.querySelector(".Loading")
-        // // document.body.style.opacity="0.7"
-        // // doc.style.display = "flex"
-        // // doc.style.opacity = "1"
         ws.send(JSON.stringify({"message":"New game"}))
         dispatch(stateChange("Stat"))
         console.log(nodea)

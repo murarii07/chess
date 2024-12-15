@@ -13,7 +13,8 @@ function App() {
 
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<><Navbar />
+        <Route path="/" element={<>
+        < Navbar />
         {/* <Loading /> */}
           <div className="main">
             <Landing />
