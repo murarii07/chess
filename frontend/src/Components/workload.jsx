@@ -6,6 +6,7 @@ function Workload1() {
     const nodea = useSelector(state => state.flag.value)
     const dispatch = useDispatch();
     const handleclick = (e) => {
+        console.log(ws)
         let r = document.querySelector(".workload")
         r.innerText = "Status...."
         // let doc = document.querySelector(".Loading")

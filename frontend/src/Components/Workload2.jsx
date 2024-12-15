@@ -12,16 +12,22 @@ function Workload2() {
         dispatch(stateChange(parseInt(e.target.value)))
     }
     const handleclick = async () => {
-        ws.send(JSON.stringify({ 'message': "init_start" }))
-        // let load = document.querySelector('.Loading');
-        // load.style.display = "flex";
-        let r = document.querySelector('.workload')
-        r.innerText = "Status...."
-    }
-    useEffect(() => {
-        ws.addEventListener("open", () => {
-            console.log("server started..")
-        });
+        try{
+
+            console.log(ws)
+            ws.send(JSON.stringify({ 'message': "init_start" }))
+            // let load = document.querySelector('.Loading');
+            // load.style.display = "flex";
+            let r = document.querySelector('.workload')
+            r.innerText = "Status...."
+        }catch(r){
+            console.log(r)
+        }
+        }
+        useEffect(() => {
+            ws.addEventListener("open", () => {
+                console.log("server started..")
+            });
         const eventHandle = (message) => {
             let obj = message.data; //string
             obj = JSON.parse(obj)

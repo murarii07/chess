@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const flagSlice = createSlice({
     name: 'ws',
     initialState: {
-        value: new WebSocket("ws://localhost:3000")
+        value: new WebSocket("ws://localhost:5000")
     },
     reducers: {
         stateChange: (state, action) => {

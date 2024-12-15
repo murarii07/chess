@@ -1,12 +1,11 @@
 import express from "express";
 import path from 'path'
 import {login} from './Routes/login route.js'
-
 import { WebSocketServer } from 'ws'
 import { gameManager, Game } from "./gameManager.js";
 import { register } from "./Routes/register route.js";
 const app = express();
-const port = 3000;
+const port =  5000;
 import cors from 'cors'
 app.use(express.static(path.resolve('public')))
 app.use(cors())
