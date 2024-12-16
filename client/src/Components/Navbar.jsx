@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 function Navbar() {
     const user = useSelector(st => st.user.value);
     return (
-        <nav className="navbar">
+        <nav className="w-full h-1/6 mt-0 border-red-600 border-2 bg-red-600 rounded-md flex justify-between">
             <ul>
                 CHESS
             </ul>

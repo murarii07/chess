@@ -1,26 +1,28 @@
 
 import Timer from './timer'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PlayRandomMoveEngine from './chess';
+import { useState } from 'react';
 function Landing() {
     const opponent=useSelector(st=>st.opponent.value)
     const user=useSelector(st=>st.user.value)
+    const [g]=useState(Math.floor(Math.random()*10000).toString(16))
     return (
-        <div className="chessboard">
-            <div className="row" id="receiver">
+        <div className="flex flex-col items-center justify-center   md:w-2/4 w-full">
+            <div className="w-full h-16 rounded-md" id="receiver">
                 <div>
                     {/* <img src={logo}  /> */}
                     <span>{opponent}</span>
                 </div>
                 {/* <Timer  /> */}
             </div>
-            <div className='chessb'>
+            <div className='w-full  flex justify-center '>
                 <PlayRandomMoveEngine />
             </div>
-            <div className="row" id='sender'>
+            <div className="row w-full h-16 rounded-md" id='sender'>
                 <div>
                     {/* <img src={logo}  /> */}
-                    <span>{user==="login"?Math.random(5).toString(16):user}</span>
+                    <span>{user}</span>
                 </div>
                 <Timer  />
             </div>

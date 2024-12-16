@@ -6,7 +6,7 @@ export const userCred = createSlice({
         value:'login'
     },
     reducers: {
-        stateChange: (state, action) => {
+        stateUserChange: (state, action) => {
             state.value = action.payload
         },
 
@@ -14,6 +14,6 @@ export const userCred = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { stateChange } = userCred.actions
+export const { stateUserChange } = userCred.actions
 
 export default userCred.reducer

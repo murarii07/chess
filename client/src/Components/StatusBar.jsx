@@ -15,7 +15,7 @@ function Status() {
     const listContent = useMemo(() => ({
         "New": <Workload1 />,
         "Stat": <Workload2 />,
-        "Messages": <Workload3 />
+        // "Messages": <Workload3 />
     }), [])
     const list = Object.keys(listContent)
     console.log("ds")
@@ -23,7 +23,7 @@ function Status() {
     //performing event delegation.........
     const handleClick = (e) => {
         let targetedLi = e.target
-        console.log(targetedLi.innerText)
+        console.log("as it is:----",targetedLi.innerText)
         const s = listContent[targetedLi.innerText]
         console.log(s)
         dispatch(stateChange(targetedLi.innerText))
@@ -37,8 +37,8 @@ function Status() {
         
     }, [nodea])
     return (
-        <div className="Status">
-            <div className="nav" onClick={handleClick}>
+        <div className="m-0  md:w-2/4 w-full">
+            <div className="nav w-full mb-0 flex h-16" onClick={handleClick}>
                 {list.map(((x, index) => <li className={x} key={index} id={x}>{x}</li>))}
             </div>
             {listContent[nodea]}

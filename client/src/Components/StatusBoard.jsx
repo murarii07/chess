@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux'
 export const StatusBoard = () => {
     const statusBoard = useSelector(state=>state.statusBoard.value)
     return (
-        <div  className="workload" style={{ backgroundColor: "#00000d",display:"flex",justifyContent:"space-evenly"  ,width:"100%",height:"100%",color:"white"}}>
-            {statusBoard.map((x, index) => (<div key={index} style={{width:"50%"}}>{x}</div>))}
+        <div  className=" w-[95%] h-[470px] m-5 rounded-xl flex flex-wrap overflow-auto bg-[#00000d] text-white  p-10 ">
+            {statusBoard.map((x, index) => (<div key={index} className='w-2/4 h-12 m-0'>{x}</div>))}
         </div>
     )
 }

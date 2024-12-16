@@ -43,7 +43,11 @@ class Game {
         try {
             if (gamecopy.move(move)) {
                 this.chess.move(move);
+                console.log("ads",this.chess.get(move.to),move)
                 this.stat.push(move);
+                this.playerCheck();
+                this.gameOver();
+                this.playerCheckMate();
                 return true;
             }
         } catch (e) {
@@ -51,6 +55,20 @@ class Game {
         }
 
 
+    }
+    gameOver(){
+        if(this.chess.isDraw())
+            console.log("Game is drawed")
+    }
+    playerCheck(){
+        if(this.chess.isCheck()){
+            console.log("player is check")
+        }
+    }
+    playerCheckMate(){
+        if(this.chess.isCheckmate()){
+            console.log("player wins")
+        }
     }
 }
 

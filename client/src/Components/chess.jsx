@@ -4,6 +4,8 @@ import { Chessboard } from "react-chessboard";
 import { useDispatch, useSelector } from "react-redux";
 import { stateChange } from '../redux/games/playerCredientials'
 import { stateFlagChange } from "../redux/games/flag";
+import DialogBox from "./DialogBox";
+import { stateUserChange } from "../redux/games/userCredientials";
 function PlayRandomMoveEngine() {
   const ws = useSelector(state => state.ws.value)
   const user = useSelector(state => state.user.value)
@@ -12,7 +14,10 @@ function PlayRandomMoveEngine() {
   const [color, setcolor] = useState("white")
   const [playerId] = useState(null);
   const id = useRef(playerId)
+  const chessRef = useRef(null)
   const dispatch = useDispatch();
+  const [popUp, setPopUp] = useState({ flag: false, message: "OOps!!" })
+
   function onDrop(sourceSquare, targetSquare) {
     if (gameFlag) {
       console.log("yaaaa", id.current, gameFlag)
@@ -29,11 +34,17 @@ function PlayRandomMoveEngine() {
     }
   }
   useEffect(() => {
+    console.log(chessRef.current)
+  }, [])
+  useEffect(() => {
     console.log(gameFlag)
   }, [gameFlag])
   //handling message logic
   function MessageInterpretation(obj) {
     if (obj['message'] === "playerfound") {
+      setPopUp({ flag: true, message: "player found.." })
+      console.log(popUp)
+      dispatch(stateUserChange(Math.floor(Math.random() * 10000).toString(16)))
       dispatch(stateFlagChange(true))
       id.current = obj['playerId']
       if (obj['color'] === "black") {
@@ -63,15 +74,19 @@ function PlayRandomMoveEngine() {
     }
     ws.addEventListener("message", eventHandle)
     return () => {
-      if(ws){
+      if (ws) {
 
         ws.removeEventListener("message", eventHandle)
       }
     }
-  }, [ws,gameFlag])
+  }, [ws, gameFlag])
 
-  return <Chessboard boardOrientation={color} boardWidth={456} position={game.fen()} onPieceDrop={onDrop} />;
-
+  return (
+    <>
+      <Chessboard boardOrientation={color} boardWidth={456} position={game.fen()} onPieceDrop={onDrop} ref={chessRef} />
+      <DialogBox popUp={popUp} setPopUp={setPopUp} />
+    </>
+  )
 }
 
 export default PlayRandomMoveEngine;

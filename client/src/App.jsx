@@ -1,5 +1,4 @@
 
-import './App.css';
 import Navbar from './Components/Navbar';
 import Landing from './Components/landing';
 import Status from './Components/StatusBar';
@@ -13,11 +12,12 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<>
+          <div className="flex flex-wrap " style={{width:"100%",height:"100%"}}>
         < Navbar />
-        {/* <Loading /> */}
-          <div className="main">
+        <div className='w-full h-5/6   flex m-2 overflow-hidden flex-wrap mb-4'>
             <Landing />
             <Status />
+        </div>
           </div></>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
