@@ -6,7 +6,6 @@ import Status from './Components/StatusBar';
 import Login from './Components/login';
 import Register from './Components/Register';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Loading from './Components/loading';
 function App() {
 
   return (
