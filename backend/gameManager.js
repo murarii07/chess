@@ -16,13 +16,24 @@ class gameManager {
         //  this.onlineplayer = this.onlineplayer.filter(x => x !== user)
         this.idx--;
     }
-    playGame(p1,p2) {
+    playGame(p1, p2) {
         const r = new Game(p1, p2);
         this.gameZone.push(r)
         const id = this.gameZone.indexOf(r)
-        p1.send(JSON.stringify({ "message": "playerfound", playerId: id, color: 'white', player: "p1",opponent:"naam" }))
-        p2.send(JSON.stringify({ "message": "playerfound", playerId: id, color: 'black', player: "p2",opponent:"naam" }))
+        this.messageTranfer(p1, {
+             message: "playerfound", 
+             playerId: id, 
+             color: 'white', 
+             player: "p1", 
+             opponent: "naam" })
+        this.messageTranfer(p2, { "message": "playerfound", playerId: id, color: 'black', player: "p2", opponent: "naam" })
         console.log("lets play the game")
+    }
+    messageTranfer(player, messageObject) {
+        player.send(JSON.stringify(messageObject))
+    }
+    singleGameRetrive(indexNumber){
+        return this.gameZone[indexNumber]
     }
 
 }
@@ -43,7 +54,7 @@ class Game {
         try {
             if (gamecopy.move(move)) {
                 this.chess.move(move);
-                console.log("ads",this.chess.get(move.to),move)
+                console.log("ads", this.chess.get(move.to), move)
                 this.stat.push(move);
                 this.playerCheck();
                 this.gameOver();
@@ -53,22 +64,25 @@ class Game {
         } catch (e) {
             return false
         }
-
-
     }
-    gameOver(){
-        if(this.chess.isDraw())
+    gameOver() {
+        if (this.chess.isDraw())
             console.log("Game is drawed")
     }
-    playerCheck(){
-        if(this.chess.isCheck()){
+    playerCheck() {
+        if (this.chess.isCheck()) {
             console.log("player is check")
         }
     }
-    playerCheckMate(){
-        if(this.chess.isCheckmate()){
+    playerCheckMate() {
+        if (this.chess.isCheckmate()) {
             console.log("player wins")
         }
+    }
+    gameMessage(p1MessageObject,p2MessageObject){
+        this.player1.send(JSON.stringify(p1MessageObject))
+        this.player2.send(JSON.stringify(p2MessageObject))
+
     }
 }
 
