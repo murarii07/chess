@@ -1,23 +1,38 @@
+import { useRef, useState } from "react";
 import { stateChange } from "../redux/flagSlice";
-import Loading from "./loading"
 import { useDispatch, useSelector } from "react-redux"
+import DialogBox from "./DialogBox";
+import { wsInstance } from "./wsclass";
+import Loading from "./loading";
 function Workload1() {
-    const ws = useSelector(state=>state.ws.value)
-    const nodea = useSelector(state => state.flag.value)
+    const count = useSelector(state => state.time.value)
+    const [popUp,setPopUp]=useState({flag:false,message:"oops"})
     const dispatch = useDispatch();
-    const handleclick = (e) => {
-        console.log(ws)
-        let r = document.querySelector(".workload")
-        r.innerText = "Status...."
-        ws.send(JSON.stringify({"message":"New game"}))
-        dispatch(stateChange("Stat"))
-        console.log(nodea)
-    }
+    const divRef = useRef(null)
+    const handle = (e) => {
+            console.log(e.target.value)
+            dispatch(stateChange(parseInt(e.target.value)))
+        }
+
+        const handleclickk =() => {
+            try {
+                wsInstance.messageSend({ 'message': "init_start",});
+                setPopUp({flag:true,message:"searching your opponent"})
+            } catch (r) {
+                console.log(r)
+            }
+        }
     return (
         <>
-            <div className="workload">
-                <button className="play" onClick={handleclick}>New Game</button>
-            </div>
+             <div className="workload"  ref={divRef} >
+                        <button className="play" onClick={handleclickk}>Play</button>
+                        <select value={count} onChange={handle} id="opt">
+                            <option value={5}>5min</option>
+                            <option value={10}>10min</option>
+                            <option value={3}>3min</option>
+                        </select>
+                    </div>
+            <DialogBox popUp={popUp} setPopUp={setPopUp} loading={<Loading />} />
         </>
     )
 }

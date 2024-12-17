@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { stateChange } from '../redux/games/playerCredientials'
 import { stateFlagChange } from "../redux/games/flag";
 import DialogBox from "./DialogBox";
-import { stateUserChange } from "../redux/games/userCredientials";
+import { wsInstance } from "./wsclass";
+import { updateState } from "../redux/games/statusBoard";
 function PlayRandomMoveEngine() {
-  const ws = useSelector(state => state.ws.value)
   const user = useSelector(state => state.user.value)
   const gameFlag = useSelector(state => state.f.value)
   const [game, setGame] = useState(new Chess());
@@ -22,7 +22,7 @@ function PlayRandomMoveEngine() {
     if (gameFlag) {
       console.log("yaaaa", id.current, gameFlag)
       console.log("sd", sourceSquare, targetSquare,)
-      ws.send(JSON.stringify({
+      const messObj = {
         message: "move",
         playerId: id.current,
         playername: user,
@@ -30,7 +30,8 @@ function PlayRandomMoveEngine() {
           from: sourceSquare,
           to: targetSquare,
         }
-      }))
+      }
+      wsInstance.messageSend(messObj)
     }
   }
   useEffect(() => {
@@ -40,11 +41,11 @@ function PlayRandomMoveEngine() {
     console.log(gameFlag)
   }, [gameFlag])
   //handling message logic
-  function MessageInterpretation(obj) {
+  function MessageInterpretation(message) {
+    let obj = JSON.parse(message.data);
     if (obj['message'] === "playerfound") {
-      setPopUp({ flag: true, message: "player found.." })
+      setPopUp({flag:true, message: "player found.." })
       console.log(popUp)
-      dispatch(stateUserChange(Math.floor(Math.random() * 10000).toString(16)))
       dispatch(stateFlagChange(true))
       id.current = obj['playerId']
       if (obj['color'] === "black") {
@@ -58,6 +59,8 @@ function PlayRandomMoveEngine() {
       setGame(gameCopy)
       console.log(game, gameFlag)
       dispatch(stateFlagChange(!gameFlag))
+      const positions = obj['moved']
+      dispatch(updateState(`${positions.from}-${positions.to}`))
     }
     if (obj['opponent']) {
       console.log(obj['opponent'])
@@ -68,22 +71,17 @@ function PlayRandomMoveEngine() {
   }
   useEffect(() => {
     console.log("sd")
-    const eventHandle = (message) => {
-      let obj = JSON.parse(message.data); //string
-      MessageInterpretation(obj)
-    }
-    ws.addEventListener("message", eventHandle)
+    wsInstance.ws.addEventListener("message", MessageInterpretation)
     return () => {
-      if (ws) {
-
-        ws.removeEventListener("message", eventHandle)
+      if (wsInstance.ws) {
+        wsInstance.ws.removeEventListener("message", MessageInterpretation)
       }
     }
-  }, [ws, gameFlag])
+  }, [wsInstance.ws, gameFlag])
 
   return (
     <>
-      <Chessboard boardOrientation={color} boardWidth={456} position={game.fen()} onPieceDrop={onDrop} ref={chessRef} />
+      <Chessboard boardOrientation={color} boardWidth={456} position={game.fen()} onPieceDrop={onDrop} ref={chessRef} animationDuration={20}  />
       <DialogBox popUp={popUp} setPopUp={setPopUp} />
     </>
   )

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const userCred = createSlice({
     name: 'user',
     initialState: {
-        value:'login'
+        value:''
     },
     reducers: {
         stateUserChange: (state, action) => {

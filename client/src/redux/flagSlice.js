@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const flagSlice = createSlice({
     name: 'flag',
     initialState: {
-        value:"Stat"
+        value:"New"
     },
     reducers: {
         stateChange: (state, action) => {
