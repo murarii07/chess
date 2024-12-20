@@ -1,6 +1,7 @@
 import { Button, Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import Loading from './loading'
 
 export default function DialogBox({popUp,setPopUp,loading}) {
     useEffect(() => {
@@ -33,7 +34,7 @@ export default function DialogBox({popUp,setPopUp,loading}) {
                             >
                                 <DialogTitle className={"text-center font-bold"}>GAME</DialogTitle>
                                 <Description>{popUp.message}</Description>
-                                <Description>{loading|| ""}</Description>
+                                 {loading && <Loading />}
                                 <div className="flex gap-4">
                                     <button onClick={close} className='px-7 py-2 rounded-lg bg-red-700'>Ok</button>
                                 </div>

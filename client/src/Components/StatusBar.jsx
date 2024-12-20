@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {useMemo } from "react";
 import Workload1 from "./workload";
-import { useSelector, useDispatch } from "react-redux";
-import { stateChange } from "../redux/flagSlice";
+
 import { StatusBoard } from "./StatusBoard";
 import Example from "./Tabs";
+import { useSelector } from "react-redux";
 function Status() {
+    const f=useSelector(state=>state.f.value)
     //using redux
     const listContent = useMemo(() => ({
         "New": <Workload1 />,
@@ -13,7 +14,7 @@ function Status() {
     return (
         <div className="m-0  md:w-2/4 w-full">
            
-            <Example component={listContent} />
+            <Example component={listContent} index={f?1:0} />
 
         </div>
     )

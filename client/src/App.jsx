@@ -12,7 +12,7 @@ function App() {
 
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<>
+        <Route path="/chess" element={<>
           <div className="flex flex-wrap " style={{width:"100%",height:"100%"}}>
         < Navbar />
         <div className='w-full h-5/6   flex m-2 overflow-hidden flex-wrap mb-4 '>
@@ -20,9 +20,9 @@ function App() {
             <Status />
         </div>
           </div></>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/signin" element={<Login />} />
+        <Route path="/signup" element={<Register />} />
+        <Route path="/" element={<Home />} />
         <Route />
       </Routes>
     </BrowserRouter>

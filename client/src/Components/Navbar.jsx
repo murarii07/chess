@@ -1,25 +1,27 @@
 import { useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom'
 function Navbar() {
-    const user = useSelector(st => st.user.value);
+    const user = useSelector(st => st.gameInfo.user);
+    const navi=useNavigate()
     return (
-        <nav className="w-full h-1/6 mt-0 border-red-900 border-2 bg-red-900 rounded-md flex justify-between">
-            <ul>
-                CHESS
-            </ul>
-            <ul>
-                <li>
-                    {user === 'login' ? <a href="/login" target="_blank" rel="noopener noreferrer">login
-                    </a>
-                        : user}
+        <div className="w-[95%] mx-auto h-1/6 mt-2 rounded-md flex  justify-between  items-center">
+        <h1 className="text-3xl font-extrabold ">CHESS</h1>
+            <ul className="" onClick={(e)=>{
+                if(e.target){
+                    navi("/"+e.target.innerText)
+                }
+            }}>
+
+                <li className="text-white">
+                    signin
 
                 </li>
-                <li>
-                    <a href="/register" target="_blank" rel="noopener noreferrer">register
-                    </a>
+                <li className="text-white">
+                    signup
                 </li>
 
             </ul>
-        </nav>
+        </div>
     )
 }
 export default Navbar;

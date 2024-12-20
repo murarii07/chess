@@ -10,8 +10,8 @@ export default function Example(props) {
 
   return (
     <div className="w-[95%]">
-      <TabGroup>
-        <TabList className=" nav p-3 flex space-x-1 rounded-xl">
+      <TabGroup  defaultIndex={props.index} >
+        <TabList className=" p-3 flex space-x-1 rounded-xl" >
           {Object.keys(categories).map((category) => (
             <Tab
               key={category}

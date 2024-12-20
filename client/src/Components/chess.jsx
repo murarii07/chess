@@ -2,87 +2,104 @@ import { useRef, useState, useEffect } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useDispatch, useSelector } from "react-redux";
-import { stateChange } from '../redux/games/playerCredientials'
+
 import { stateFlagChange } from "../redux/games/flag";
 import DialogBox from "./DialogBox";
 import { wsInstance } from "./wsclass";
 import { updateState } from "../redux/games/statusBoard";
 function PlayRandomMoveEngine() {
-  const user = useSelector(state => state.user.value)
+  const [boardWidth, setBoardWidth] = useState(456);
+  const gameInfo = useSelector(state => state.gameInfo)
   const gameFlag = useSelector(state => state.f.value)
   const [game, setGame] = useState(new Chess());
-  const [color, setcolor] = useState("white")
-  const [playerId] = useState(null);
-  const id = useRef(playerId)
   const chessRef = useRef(null)
+  const audioRef = useRef(null)
   const dispatch = useDispatch();
   const [popUp, setPopUp] = useState({ flag: false, message: "OOps!!" })
-
   function onDrop(sourceSquare, targetSquare) {
     if (gameFlag) {
-      console.log("yaaaa", id.current, gameFlag)
-      console.log("sd", sourceSquare, targetSquare,)
+      console.log("Moves", sourceSquare, targetSquare,)
       const messObj = {
         message: "move",
-        playerId: id.current,
-        playername: user,
+        playerId: gameInfo.gameId,
+        playername: gameInfo.user,
         move: {
           from: sourceSquare,
           to: targetSquare,
         }
       }
-      wsInstance.messageSend(messObj)
+      wsInstance.moveEvent(messObj)
     }
   }
-  useEffect(() => {
-    console.log(chessRef.current)
-  }, [])
-  useEffect(() => {
-    console.log(gameFlag)
-  }, [gameFlag])
-  //handling message logic
-  function MessageInterpretation(message) {
-    let obj = JSON.parse(message.data);
-    if (obj['message'] === "playerfound") {
-      setPopUp({flag:true, message: "player found.." })
-      console.log(popUp)
-      dispatch(stateFlagChange(true))
-      id.current = obj['playerId']
-      if (obj['color'] === "black") {
-        dispatch(stateFlagChange(false))
-        setcolor(obj['color'])
+  function handleResult(msg) {
+    let response = JSON.parse(msg);
+    let m = ""
+    if (response.message === "Draw") {
+      m = "Game is Draw Play next game"
+    }
+    else if (response.message === "Win") {
+      m = "You WIN!!!!!"
+    }
+    else {
+      m = "You Loose!!!"
+    }
+    setPopUp({ flag: true, message: m })
 
-      }
-    }
-    else if (obj['message'] === 'moved') {
-      const gameCopy = new Chess(obj['chessboard']);
-      setGame(gameCopy)
-      console.log(game, gameFlag)
-      dispatch(stateFlagChange(!gameFlag))
-      const positions = obj['moved']
-      dispatch(updateState(`${positions.from}-${positions.to}`))
-    }
-    if (obj['opponent']) {
-      console.log(obj['opponent'])
-      dispatch(stateChange(obj['opponent']))
-    }
 
-    console.log(gameFlag)
   }
+  function MovedMessage(message) {
+    let obj = JSON.parse(message);
+    const gameCopy = new Chess(obj.chessboard);
+    setGame(gameCopy)
+    dispatch(stateFlagChange(!gameFlag))
+    audioRef.current.src = "move-self.mp3"
+    audioRef.current.play()
+    const positions = obj.moved
+    dispatch(updateState(`${positions.from}-${positions.to}`))
+  }
+  const handleCheck = (msg) => {
+    console.log("Check event:", msg);
+    audioRef.current.src = "move-check.mp3"
+    audioRef.current.pla()
+  };
   useEffect(() => {
-    console.log("sd")
-    wsInstance.ws.addEventListener("message", MessageInterpretation)
+    wsInstance.ws.addEventListener("check", handleCheck);
+    return () => {
+      wsInstance.ws.removeEventListener("check", handleCheck);
+    };
+  }, [wsInstance.ws]);
+  useEffect(() => {
+    wsInstance.ws.addEventListener("result", handleResult);
+    return () => {
+      wsInstance.ws.removeEventListener("result", handleResult);
+    };
+  }, [wsInstance.ws]);
+
+  useEffect(() => {
+    wsInstance.ws.addEventListener("moved", MovedMessage)
     return () => {
       if (wsInstance.ws) {
-        wsInstance.ws.removeEventListener("message", MessageInterpretation)
+        wsInstance.ws.removeEventListener("moved", MovedMessage)
       }
     }
-  }, [wsInstance.ws, gameFlag])
+  }, [dispatch, gameFlag])
+  useEffect(() => {
+    const handleResize = () => {
+      const newWidth = Math.min(window.innerWidth - 40, 456);
+      setBoardWidth(newWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
 
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   return (
     <>
-      <Chessboard boardOrientation={color} boardWidth={456} position={game.fen()} onPieceDrop={onDrop} ref={chessRef} animationDuration={20}  />
+      <Chessboard boardOrientation={gameInfo.color} boardWidth={boardWidth} position={game.fen()} onPieceDrop={onDrop} ref={chessRef} animationDuration={200} />
       <DialogBox popUp={popUp} setPopUp={setPopUp} />
+      <audio src={"move-self.mp3"} controls={false} ref={audioRef} hidden></audio>
     </>
   )
 }

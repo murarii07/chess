@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const Flag = createSlice({
     name: 'flag',
     initialState: {
-        value:false,
+        value:'not_started',
     },
     reducers: {
         stateFlagChange: (state,action) => {

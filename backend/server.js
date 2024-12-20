@@ -7,6 +7,7 @@ import { register } from "./Routes/register route.js";
 const app = express();
 const port = 5000;
 import cors from 'cors'
+import { Server } from "socket.io";
 app.use(express.static(path.resolve('public')))
 app.use(cors())
 app.use(express.json())
@@ -24,28 +25,22 @@ const server = app.listen(port, () => {
 let onlineplayer = []
 // let dd = []
 const Manager = new gameManager();
-const wss = new WebSocketServer({ server })
+const wss = new Server(server)
 wss.on("connection", (ws) => {
     Manager.addUser(ws)
     ws.on("message", (message) => {
         let obj = JSON.parse(message)
         console.log(obj)
-        if (obj['message'] === 'init_start') {
-            onlineplayer.push(ws)
-            Manager.messageTranfer(ws,{ message: "Searching players.........." })
-            if (onlineplayer.length >= 2) {
-                const p1 = onlineplayer.shift()
-                const p2 = onlineplayer.shift()
-                Manager.playGame(p1, p2)
-            }
-        }
-        else if (obj['message'] === 'move') {
-            let id = obj['playerId']
+        console.log(Manager.players.length)
+    })
+    ws.on("move",(msg)=>{
+        let obj=JSON.parse(msg)
+        if (obj.message === 'move') {
+            let id = obj.playerId
             try {
                 const f = Manager.singleGameRetrive(parseInt(id))
                 console.log(id)
-                let resOfMove = f.makeAMove(obj['move'])
-                // console.log(res)
+                let resOfMove = f.makeAMove(obj.move)
                 if (resOfMove) {
                     console.log(f.chess.fen())
                     f.gameMessage({ chessboard: f.chess.fen(), message: 'moved', moved: obj['move'] }, { chessboard: f.chess.fen(), message: 'moved', moved: obj['move'] })
@@ -58,11 +53,29 @@ wss.on("connection", (ws) => {
             }
         }
 
-        console.log(Manager.players.length)
-
-
     })
-    ws.on("close", () => {
+   ws.on("play",(msg)=>{
+    let obj=JSON.parse(msg)
+    if (obj.message === 'init_start') {
+        console.log(obj)
+        const map=new Map();
+        map.set(obj.user,ws)
+        onlineplayer.push(map)
+        // onlineplayer.push(ws)
+        Manager.messageTranfer(ws, { message: "Searching players.........." })
+        if (onlineplayer.length >= 2) {
+            const p1 = onlineplayer.shift()
+            const p2 = onlineplayer.shift()
+            for (const key of p1.keys()) {
+               console.log(key)
+            }
+            console.log(p1) //convert iterator to array
+            
+            Manager.playGame(Array.from(p1.values())[0],Array.from(p2.values())[0],Array.from(p1.keys())[0],Array.from(p2.keys())[0])
+        }
+    }
+   })
+    ws.on("disconnect", () => {
         Manager.removeUser(ws)
     })
 });

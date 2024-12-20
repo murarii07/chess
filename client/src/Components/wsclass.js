@@ -1,8 +1,9 @@
+import {io} from 'socket.io-client'
 class NetworkManager{
-    ws= new WebSocket("http://localhost:5000")
+    ws= new io("http://localhost:5000")
 
-    messageSend(messObj){
-        this.ws.send(JSON.stringify(messObj))
+    moveEvent(messObj){
+        this.ws.emit("move",JSON.stringify(messObj))
     }
     wsMessageEvent(func){
         this.ws.addEventListener("message",func)
