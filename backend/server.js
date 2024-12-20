@@ -1,13 +1,12 @@
 import express from "express";
 import path from 'path'
 import { login } from './Routes/login route.js'
-import { WebSocketServer } from 'ws'
 import { gameManager, Game } from "./gameManager.js";
 import { register } from "./Routes/register route.js";
+import { Server } from "socket.io";
 const app = express();
 const port = 5000;
 import cors from 'cors'
-import { Server } from "socket.io";
 app.use(express.static(path.resolve('public')))
 app.use(cors())
 app.use(express.json())
@@ -25,16 +24,11 @@ const server = app.listen(port, () => {
 let onlineplayer = []
 // let dd = []
 const Manager = new gameManager();
-const wss = new Server(server)
-wss.on("connection", (ws) => {
-    Manager.addUser(ws)
-    ws.on("message", (message) => {
-        let obj = JSON.parse(message)
-        console.log(obj)
-        console.log(Manager.players.length)
-    })
-    ws.on("move",(msg)=>{
-        let obj=JSON.parse(msg)
+const io = new Server(server)
+io.on("connection", (socket) => {
+    Manager.addUser(socket)
+    socket.on("move", (msg) => {
+        let obj = JSON.parse(msg)
         if (obj.message === 'move') {
             let id = obj.playerId
             try {
@@ -54,28 +48,25 @@ wss.on("connection", (ws) => {
         }
 
     })
-   ws.on("play",(msg)=>{
-    let obj=JSON.parse(msg)
-    if (obj.message === 'init_start') {
-        console.log(obj)
-        const map=new Map();
-        map.set(obj.user,ws)
-        onlineplayer.push(map)
-        // onlineplayer.push(ws)
-        Manager.messageTranfer(ws, { message: "Searching players.........." })
-        if (onlineplayer.length >= 2) {
-            const p1 = onlineplayer.shift()
-            const p2 = onlineplayer.shift()
-            for (const key of p1.keys()) {
-               console.log(key)
+    socket.on("play", (msg) => {
+        let obj = JSON.parse(msg)
+        if (obj.message === 'init_start') {
+            console.log(obj)
+            const map = new Map();
+            map.set(obj.user, socket)
+            onlineplayer.push(map)
+            // onlineplayer.push(socket)
+            Manager.messageTranfer(socket, { message: "Searching players.........." })
+            if (onlineplayer.length >= 2) {
+                const p1 = onlineplayer.shift()
+                const p2 = onlineplayer.shift()
+                //convert iterator to array
+
+                Manager.playGame(Array.from(p1.values())[0], Array.from(p2.values())[0], Array.from(p1.keys())[0], Array.from(p2.keys())[0])
             }
-            console.log(p1) //convert iterator to array
-            
-            Manager.playGame(Array.from(p1.values())[0],Array.from(p2.values())[0],Array.from(p1.keys())[0],Array.from(p2.keys())[0])
         }
-    }
-   })
-    ws.on("disconnect", () => {
-        Manager.removeUser(ws)
+    })
+    socket.on("disconnect", () => {
+        Manager.removeUser(socket)
     })
 });
