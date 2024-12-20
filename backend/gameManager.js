@@ -16,13 +16,26 @@ class gameManager {
         //  this.onlineplayer = this.onlineplayer.filter(x => x !== user)
         this.idx--;
     }
-    playGame(p1,p2) {
+    playGame(p1, p2, user1Name, user2Name) {
         const r = new Game(p1, p2);
         this.gameZone.push(r)
         const id = this.gameZone.indexOf(r)
-        p1.send(JSON.stringify({ "message": "playerfound", playerId: id, color: 'white', player: "p1",opponent:"naam" }))
-        p2.send(JSON.stringify({ "message": "playerfound", playerId: id, color: 'black', player: "p2",opponent:"naam" }))
+
+        this.messageTranfer(p1, {
+            message: "playerfound",
+            gameId: id,
+            color: 'white',
+            player: "p1",
+            opponent: user2Name
+        })
+        this.messageTranfer(p2, { "message": "playerfound", gameId: id, color: 'black', player: "p2", opponent: user1Name })
         console.log("lets play the game")
+    }
+    messageTranfer(player, messageObject) {
+        player.emit("userCredentials", JSON.stringify(messageObject))
+    }
+    singleGameRetrive(indexNumber) {
+        return this.gameZone[indexNumber]
     }
 
 }
@@ -31,7 +44,9 @@ class gameManager {
 class Game {
     player1;
     player2;
-    stat = []
+    stat = [];
+    player1Name;
+    player2Name;
     chess = new Chess()
     constructor(player1, player2) {
         this.player1 = player1
@@ -43,14 +58,40 @@ class Game {
         try {
             if (gamecopy.move(move)) {
                 this.chess.move(move);
+                console.log(this.chess.turn())
+                console.log("ads", this.chess.get(move.to), move)
                 this.stat.push(move);
+                this.playerCheck();
+                this.gameOver();
+                this.playerCheckMate();
                 return true;
             }
         } catch (e) {
             return false
         }
-
-
+    }
+    gameOver() {
+        if (this.chess.isStalemate()) {
+            this.player1.emit("result", JSON.stringify({ message: "Draw" }))
+            this.player2.emit("result", JSON.stringify({ message: "Draw" }))
+        }
+    }
+    playerCheck() {
+        if (this.chess.isCheck()) {
+            console.log(this.chess.isCheck())
+            this.player1.emit("check", "true")
+            this.player2.emit("check", "true")
+        }
+    }
+    playerCheckMate() {
+        if (this.chess.isCheckmate()) {
+            this.player1.emit("result", JSON.stringify({ message: "Win" }))
+            this.player2.emit("result", JSON.stringify({ message: "Win" }))
+        }
+    }
+    gameMessage(p1MessageObject, p2MessageObject) {
+        this.player1.emit("moved", JSON.stringify(p1MessageObject))
+        this.player2.emit("moved", JSON.stringify(p2MessageObject))
     }
 }
 
