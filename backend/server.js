@@ -1,8 +1,8 @@
 import express from "express";
 import path from 'path'
-import { login } from './Routes/login route.js'
+import { login } from './src/Routes/login route.js'
 import { gameManager, Game } from "./gameManager.js";
-import { register } from "./Routes/register route.js";
+import { register } from "./src/Routes/register route.js";
 import { Server } from "socket.io";
 const app = express();
 const port = 5000;

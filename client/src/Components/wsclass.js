@@ -1,6 +1,6 @@
 import {io} from 'socket.io-client'
 class NetworkManager{
-    ws= new io("http://localhost:5000")
+    ws= new io("/api")
 
     moveEvent(messObj){
         this.ws.emit("move",JSON.stringify(messObj))
