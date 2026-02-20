@@ -16,7 +16,7 @@ export const Home = () => {
     <img src="a.jpg" alt="" className='w-full h-full' />
     </div>
     <div className='bg-neutral-950 min-w-[400px] min-h-[400px] rounded-lg shadow-lg shadow-black flex items-center gap-y-5 flex-col justify-center'>
-    <button className="play p-2 bg-red-600 rounded-md max-h-12 w-[65%] font-extrabold text-2xl" onClick={()=>{
+    <button className="play p-2 bg-blue-600 rounded-md max-h-12 w-[65%] font-extrabold text-2xl" onClick={()=>{
         navigate("/chess")
         dispatch(stateUserChange(g))
         window.localStorage.setItem("playerName",g)
