@@ -24,7 +24,7 @@ export const Home = () => {
       {/* <button className=" p-2 bg-red-600 rounded-md max-h-12 w-[65%] font-extrabold text-2xl" onClick={()=>{
         navigate("/chess")
     }} >Play Online</button> */}
-    <div>Create account? <a href='/register' target='_blank' className='text-red-600'>Register</a></div>
+    <div>Create account? <a href='/register' target='_blank' className='text-red-600'>Registers</a></div>
     {/* <button className="play" >Login</button> */}
     </div> 
     </div>
